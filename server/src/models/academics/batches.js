@@ -4,8 +4,9 @@ const batches = new mongoose.Schema({
         type:String,
         required:true
     },
-    course:{
-        type:String,
+    courseId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"courses",
         required:true
     },
     start:{
