@@ -3,7 +3,7 @@ const { addCourse, updateCourse, deactiveCourse } = require('../../controllers/a
 const routerCourse = express.Router();
 
 routerCourse.post('/add-course' , addCourse)
-routerCourse.post('/update-status' , deactiveCourse)
+routerCourse.patch('/update-status' , deactiveCourse)
 routerCourse.patch('/update-course' , updateCourse)
 
 module.exports = routerCourse;

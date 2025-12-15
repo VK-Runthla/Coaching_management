@@ -43,12 +43,13 @@ const deactiveCourse = async (req, res) => {
     if (!check) {
         return res.status(400).json({ status: false, message: "Invalid Id !" })
     }
-    let statusCheck = check.status = status
-    console.log(statusCheck)
-    if (check.status == "Active") {
-        return res.status(200).json({ status: true, message: "active", status: check.status })
+    let statusCheck = check.status = status;
+    const updateStatus = await course.findByIdAndUpdate(id , {status : statusCheck} , {new : true})
+    await updateStatus.save()
+    if (updateStatus.status == "Active") {
+        return res.status(200).json({ status: true, message: "active", status: updateStatus.status })
     } else {
-        return res.status(200).json({ status: true, message: "inactive", status: check.status })
+        return res.status(200).json({ status: true, message: "inactive", status: updateStatus.status })
     }
 
 }
