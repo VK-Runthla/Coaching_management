@@ -16,4 +16,4 @@ const addadmin = async (req, res) => {
     }
 }
 
-module.exports = { addadmin }
+module.exports = { addadmin } ; 

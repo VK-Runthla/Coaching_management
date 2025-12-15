@@ -10,4 +10,5 @@ const connectedDatabase = async (req, res) => {
         res.send({ status: 0, msg: "error", error })
     }
 }
-module.exports = connectedDatabase 
+module.exports = connectedDatabase
+
