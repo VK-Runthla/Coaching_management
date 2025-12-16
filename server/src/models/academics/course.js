@@ -26,6 +26,11 @@ const courseSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ["Active", "Inactive"]
+    },
+    batch_Id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "batches",
+        required: true
     }
 })
 const course = mongoose.model("courses", courseSchema)
