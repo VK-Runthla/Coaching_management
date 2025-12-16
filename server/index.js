@@ -6,6 +6,7 @@ const routerCourse = require("./src/routes/academics/courseRouter");
 const studentRouter = require("./src/routes/studentRoute/studentRoutes")
 
 const subjectRouter = require("./src/routes/SubjectRoutes");
+const popularCourseRoute = require('./src/routes/popularCourseRoute/popularCourseRoute');
 const app = express();
 const port = 4001;
 connectedDatabase();
@@ -16,6 +17,7 @@ app.use("/api/admin", adminRouter);
 app.use("/course", routerCourse);
 // app.use("/api/student", subjectRouter);
 app.use("/api/student", studentRouter);
+app.use('/api/popular-course', popularCourseRoute);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
