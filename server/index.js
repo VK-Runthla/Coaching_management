@@ -10,5 +10,7 @@ connectedDatabase()
 app.use('/api/admin',adminRouter)
 app.use('/api/admin',batchesRoute)
 
-app.get('/', (req, res) => res.send('Hello World!'))
-app.listen(port, () => console.log(`App is running on port : http://localhost:${port}`))
+app.get("/", (req, res) => res.send("Hello World!"));
+app.listen(port, () =>
+  console.log(`App is running on port : http://localhost:${port}`)
+);
