@@ -2,7 +2,8 @@ const express = require("express");
 const connectedDatabase = require("../server/src/config/db");
 const adminRouter = require("../server/src/routes/addadminRoute");
 const routerCourse = require("./src/routes/academics/courseRouter");
-const subjectRouter = require("./src/routes/academics/Subject");
+// const subjectRouter = require("./src/routes/academics/Subject");
+const studentRouter = require("./src/routes/studentRoute/studentRoutes")
 
 const app = express();
 const port = 4001;
@@ -10,7 +11,13 @@ connectedDatabase();
 app.use(express.json());
 app.use("/api/subject", subjectRouter);
 app.use("/api/admin", adminRouter);
+<<<<<<< HEAD
 app.use("/course", routerCourse); 
+=======
+app.use("/course", routerCourse);
+// app.use("/api/student", subjectRouter);
+app.use("/api/student", studentRouter);
+>>>>>>> 24dc5916539698779c53d6436b08d2f69dbea697
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
