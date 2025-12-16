@@ -1,4 +1,4 @@
-const sessionModel = require("../models/sessionsmodel")
+const sessionModel = require("../models/academics/sessionsmodel")
 
 const addsession = async (req, res) => {
 
