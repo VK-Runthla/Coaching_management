@@ -1,16 +1,18 @@
-const express = require('express')
-const adminRouter = require("../server/src/routes/addadminRoute")
-const connectedDatabase = require("./src/config/db")
-const batchesRoute = require('./src/routes/batchesRoute')
-const routerCourse = require('./src/routes/academics/courseRouter')
-const app = express()
-const port = 4001
-app.use(express.json())
+const express = require("express");
+const connectedDatabase = require("../server/src/config/db");
+const adminRouter = require("../server/src/routes/addadminRoute");
+const routerCourse = require("./src/routes/academics/courseRouter");
+const subjectRouter = require("./src/routes/academics/Subject");
+const studentRouter = require("./src/routes/studentRoute/studentRoutes")
 
-connectedDatabase()
-app.use('/api/admin',adminRouter)
-app.use('/api/admin',batchesRoute)
-app.use('/api/admin',routerCourse)
+const app = express();
+const port = 4001;
+connectedDatabase();
+app.use(express.json());
+app.use("/api/subject", subjectRouter);
+app.use("/api/admin", adminRouter);
+app.use("/course", routerCourse);
+app.use("/api/student", studentRouter);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
