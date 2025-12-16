@@ -1,6 +1,6 @@
 const express = require('express')
 const connectedDatabase = require("../server/src/config/db")
-const adminRouter = require("../server/src/routes/addadminRoute")
+const adminRouter = require("../server/src/routes/adminauthRoutes/addadminRoute")
 const app = express()
 const port = 4001
 connectedDatabase()
