@@ -40,8 +40,6 @@ const deleteBatch = async (req, res) => {
         }
         const data = await batcheSchema.findByIdAndDelete(id);
         res.status(200).json({ status: true, message: "batch delete successfull", data });
-
-
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
 
