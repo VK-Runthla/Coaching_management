@@ -10,7 +10,7 @@ connectedDatabase();
 app.use(express.json());
 app.use("/api/subject", subjectRouter);
 app.use("/api/admin", adminRouter);
-app.use("/course", routerCourse); 
+app.use("/api/course", routerCourse); 
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
