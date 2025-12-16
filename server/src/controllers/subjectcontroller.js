@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Addsubject = require("../models/Addstudentschema");
+const { addSubject } = require("./academics/Subject");
+// const Addsubject = require("../models/Addstudentschema");
 
 const addsubjets = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ const addsubjets = async (req, res) => {
 const deletesubject=async(req, res )=>{
   try{
 const { id }=req.params;
-await Addsubject.findByIdAndDelete(id);
+await addSubject.findByIdAndDelete(id);
 res.sent({ststus:true , message:" student delete successfully"})
   }
   catch{
