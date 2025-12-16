@@ -1,4 +1,4 @@
-const batcheSchema = require("../models/academics/batches");
+const batcheSchema = require("../../models/academics/batches");
 
 const addBatch = async (req, res) => {
     try {
