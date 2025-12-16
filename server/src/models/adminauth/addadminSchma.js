@@ -2,11 +2,11 @@ const mongoose = require("mongoose")
 
 
 const AddadminSchma = new mongoose.Schema({
-    Name: { type: String, required: true },
-    Email: { type: String, required: true, unique: true },
-    MobileNumber: { type: Number, required: true, unique: true },
-    Password: { type: String, required: true },
-    Adminprofile: { type: String },
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    mobileNumber: { type: Number, required: true, unique: true },
+    password: { type: String, required: true },
+    adminprofile: { type: String },
     // Otp:Number
 
 })
