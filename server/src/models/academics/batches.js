@@ -12,14 +12,12 @@ const batches = new mongoose.Schema({
     start:{
         type:String,
         required:true,
-        enum:["am","pm"]
     },
     end:{
         type:String,
         required:true,
-        enum:["am","pm"]
     }
-})
+},{timestamps:true})
 
 const batcheSchema = mongoose.model("batches",batches);
 module.exports = batcheSchema;

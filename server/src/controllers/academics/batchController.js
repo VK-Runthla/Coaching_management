@@ -1,4 +1,44 @@
-const batcheSchema = require("../models/academics/batches");
+const batcheSchema = require("../../models/academics/batches");
+
+
+const getBatch = async (req, res) => {
+    try {
+        const { status, name, limit = 10, page } = req.query
+        const pageNumber = parseInt(page);
+        const limitNumber = parseInt(limit)
+        const skip = (pageNumber - 1) * limitNumber ||0
+        const match = {}
+        if (status) {
+            match.status = status
+        }
+        if (name) {
+            match.name = name
+        }
+
+        const data = await batcheSchema.aggregate([
+            {
+                $match: match
+            },
+            {
+                $lookup: {
+                    from: "courses",
+                    foreignField: "_id",
+                    localField: "courseId",
+                    as: "newData"
+
+                },
+            },
+            { $skip: skip },
+           { $limit: limitNumber },
+         
+         
+     ])
+res.status(200).json({ status: true, message: "success", data });
+   } catch (error) {
+    res.status(500).json({ status: false, message: "server error", err: error.message });
+
+}
+}
 
 const addBatch = async (req, res) => {
     try {
@@ -22,8 +62,8 @@ const updateBatch = async (req, res) => {
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data  = batcheSchema.findByIdAndUpdate(id,req.body,{new:true})
-        res.status(200).json({message:"batch update successfull",data})
+        const data = batcheSchema.findByIdAndUpdate(id, req.body, { new: true })
+        res.status(200).json({ message: "batch update successfull", data })
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
     }
@@ -40,8 +80,6 @@ const deleteBatch = async (req, res) => {
         }
         const data = await batcheSchema.findByIdAndDelete(id);
         res.status(200).json({ status: true, message: "batch delete successfull", data });
-
-
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
 
@@ -51,4 +89,4 @@ const deleteBatch = async (req, res) => {
 }
 
 
-module.exports = {addBatch,updateBatch,deleteBatch};
+module.exports = { addBatch, updateBatch, deleteBatch, getBatch };
