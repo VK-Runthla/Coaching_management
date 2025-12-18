@@ -3,15 +3,15 @@ const mongoose=require("mongoose")
 const sessionSchema =new mongoose.Schema({
     year:{
         type:String,
-        require:true        
+        required:true        
     },
     batches:{
         type:String,
-        require:true
+        required:true
     },
     description:{
         type:String,
-        require:true
+        required:true
     },
     isDefault:{
         type:Boolean,

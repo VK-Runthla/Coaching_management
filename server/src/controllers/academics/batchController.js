@@ -6,7 +6,7 @@ const getBatch = async (req, res) => {
         const { status, name, limit = 10, page } = req.query
         const pageNumber = parseInt(page);
         const limitNumber = parseInt(limit)
-        const skip = (pageNumber - 1) * limitNumber || 0
+        const skip = (pageNumber - 1) * limitNumber ||0
         const match = {}
         if (status) {
             match.status = status
@@ -29,15 +29,15 @@ const getBatch = async (req, res) => {
                 },
             },
             { $skip: skip },
-            { $limit: limitNumber },
+           { $limit: limitNumber },
+         
+         
+     ])
+res.status(200).json({ status: true, message: "success", data });
+   } catch (error) {
+    res.status(500).json({ status: false, message: "server error", err: error.message });
 
-
-        ])
-        res.status(200).json({ status: true, message: "success", data });
-    } catch (error) {
-        res.status(500).json({ status: false, message: "server error", err: error.message });
-
-    }
+}
 }
 
 const addBatch = async (req, res) => {
@@ -62,7 +62,7 @@ const updateBatch = async (req, res) => {
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = batcheSchema.findByIdAndUpdate(id, { start, end }, { new: true })
+        const data = batcheSchema.findByIdAndUpdate(id, req.body, { new: true })
         res.status(200).json({ message: "batch update successfull", data })
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })

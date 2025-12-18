@@ -112,4 +112,4 @@ const updatepassword = async (req, res) => {
 }
 
 
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword }
+module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP,updatepassword }
