@@ -4,21 +4,20 @@ const batches = new mongoose.Schema({
         type:String,
         required:true
     },
-    course:{
-        type:String,
+    courseId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"courses",
         required:true
     },
     start:{
         type:String,
         required:true,
-        enum:["am","pm"]
     },
     end:{
         type:String,
         required:true,
-        enum:["am","pm"]
     }
-})
+},{timestamps:true})
 
 const batcheSchema = mongoose.model("batches",batches);
 module.exports = batcheSchema;

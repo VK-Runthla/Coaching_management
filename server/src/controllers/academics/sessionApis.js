@@ -1,4 +1,4 @@
-const sessionModel = require("../models/academics/sessionsmodel")
+const sessionModel = require("../../models/academics/sessionsmodel")
 
 const addsession = async (req, res) => {
 
@@ -18,8 +18,6 @@ const addsession = async (req, res) => {
 
 
 }
-
-
 const getsession = async (req, res) => {
 
     try {
@@ -58,8 +56,6 @@ const getsession = async (req, res) => {
     }
 
 }
-
-
 const updatesession = async (req, res) => {
 
     try {
@@ -67,7 +63,7 @@ const updatesession = async (req, res) => {
 
         const { year, batches, isDefault, description } = req.body
 
-        const update = await sessionModel.findByIdAndUpdate(id,{year,batches,isDefault,description},{new:true})
+        const update = await sessionModel.findByIdAndUpdate(id, { year, batches, isDefault, description }, { new: true })
 
         res.send({ status: true, message: "session update successfully", update })
     }
@@ -77,7 +73,6 @@ const updatesession = async (req, res) => {
     }
 
 }
-
 const deletesession = async (req, res) => {
 
     try {
@@ -94,7 +89,4 @@ const deletesession = async (req, res) => {
     }
 
 }
-
-
-
-module.exports = { addsession, getsession, updatesession,deletesession }
+module.exports = { addsession, getsession, updatesession, deletesession }
