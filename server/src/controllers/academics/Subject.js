@@ -23,6 +23,48 @@ const addSubject = async (req, res) => {
     }
 }
 
+
+
+const getSubject = async (req, res) => {
+    try {
+        const { subjectName, courseId, limit =1, page } = req.query
+
+        const pageNumber = parseInt(page) || 1
+        const limitNumber = parseInt(limit)
+        const skip = (pageNumber - 1) * limitNumber
+
+        const match = {}
+
+        if (subjectName) {
+            match.subjectName = subjectName
+        }
+
+        if (courseId) {
+            match.courseId = new mongoose.Types.ObjectId(courseId)
+        }
+
+        const data = await Subject.aggregate([
+            { $match: match },
+            {
+                $lookup: {
+                    from: "courses",
+                    localField: "courseId",
+                    foreignField: "_id",
+                    as: "courseData"
+                }
+            },
+            { $unwind: { path: "$courseData", preserveNullAndEmptyArrays: true } }, { $skip: skip }, { $limit: limitNumber }
+        ])
+
+        return res.send({ status: true, message: "success", data })
+
+    } catch (err) {
+        return res.send({ status: false, message: "server error", err })
+    }
+}
+
+
+
 const updateSubject = async (req, res) => {
     try {
         const { subjectName, courseId } = req.body
@@ -45,5 +87,18 @@ const updateSubject = async (req, res) => {
     }
 }
 
+const deleteSubject = async (req, res) => {
+    try {
+        const { id } = req.params
+        if (!id) {
+            return res.send({ status: false, message: "id not found, try correct id" })
+        }
+        await Subject.findByIdAndDelete(id)
+        return res.send({ status: true, message: "Subject delete successfully" })
+    } catch (err) {
+        return res.send({ status: false, message: "Server error", err })
+    }
+}
 
-module.exports = { addSubject, updateSubject }
+
+module.exports = { addSubject, getSubject, updateSubject, deleteSubject }
