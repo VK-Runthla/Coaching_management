@@ -57,7 +57,6 @@ const adminlogin = async (req, res) => {
         res.send({ status: 0, msg: "error", error: error.message })
     }
 }
-
 const forgotpassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -73,7 +72,6 @@ const forgotpassword = async (req, res) => {
         res.send({ status: 0, msg: "Failed to send OTP", error: error.message })
     }
 }
-
 const verifyOTP = async (req, res) => {
     try {
         const { otp, email } = req.body;
@@ -88,7 +86,6 @@ const verifyOTP = async (req, res) => {
         res.send({ status: 0, mag: "error", error: error.message })
     }
 }
-
 const updatepassword = async (req, res) => {
     const {email,newPassword} = req.body;
     try {

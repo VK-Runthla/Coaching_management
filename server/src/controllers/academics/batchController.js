@@ -6,7 +6,7 @@ const getBatch = async (req, res) => {
         const { status, name, limit = 10, page } = req.query
         const pageNumber = parseInt(page);
         const limitNumber = parseInt(limit)
-        const skip = (pageNumber - 1) * limitNumber ||0
+        const skip = (pageNumber - 1) * limitNumber || 0
         const match = {}
         if (status) {
             match.status = status
@@ -29,15 +29,15 @@ const getBatch = async (req, res) => {
                 },
             },
             { $skip: skip },
-           { $limit: limitNumber },
-         
-         
-     ])
-res.status(200).json({ status: true, message: "success", data });
-   } catch (error) {
-    res.status(500).json({ status: false, message: "server error", err: error.message });
+            { $limit: limitNumber },
 
-}
+
+        ])
+        res.status(200).json({ status: true, message: "success", data });
+    } catch (error) {
+        res.status(500).json({ status: false, message: "server error", err: error.message });
+
+    }
 }
 
 const addBatch = async (req, res) => {
