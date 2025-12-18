@@ -10,9 +10,8 @@ const addsession = async (req, res) => {
         add.save()
         res.send({ status: true, message: "session added successfully", add })
     }
-    catch (error){
+    catch {
         res.send({ status: false, message: "error adding session" })
-        console.log("error adding session", error);
 
 
     }

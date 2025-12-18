@@ -57,7 +57,7 @@ const addBatch = async (req, res) => {
 const updateBatch = async (req, res) => {
     try {
         const { id } = req.params;
-        const { } = req.body;
+        const { start, end } = req.body;
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
