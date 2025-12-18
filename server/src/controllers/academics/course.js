@@ -108,4 +108,4 @@ const deactiveCourse = async (req, res) => {
 }
 
 
-module.exports = { addCourse, updateCourse, deactiveCourse }
+module.exports = { getCourse ,addCourse, updateCourse, deactiveCourse }
