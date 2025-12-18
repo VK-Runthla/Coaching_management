@@ -108,5 +108,23 @@ const updatepassword = async (req, res) => {
     }
 }
 
+const resetadminpassword = async (req, res) => {
+    try {
+        const { email, password, newPassword } = req.body;
+        const checkemail = AddadminSchma.findOne({ email });
+        if (!checkemail) {
+            res.send({ status: false, msg: "please enter valid email" })
+        }
+        const verifypass = bcrypt.compare(password, checkemail.password)
+        if (!verifypass) {
+            res.send({ status: false, msg: "invalid password!" })
+        }
+        const updatedPass = AddadminSchma.findByIdAndUpdate(checkemail._id, { password: newPassword }, { new: true })
+        res.send({status:true,msg:"password updated successfully"})
+    } catch (error) {
+    res.send({status:false,msg:"errror",error:error.message})
+    }
+}
 
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword }
+
+module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword, resetadminpassword }
