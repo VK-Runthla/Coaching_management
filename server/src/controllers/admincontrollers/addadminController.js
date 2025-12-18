@@ -78,9 +78,17 @@ const verifyOTP = async (req, res) => {
     try {
         const { otp, email } = req.body;
         const checkotp = await otpSchema.findOne({ email })
+        if (!checkotp) {
+            return res.status(400).json({ status: 0, message: "invalid email" })
+        }
         if (otp !== checkotp.otp) {
             res.send({ status: 0, msg: "Invalid otp!" })
             console.log(checkotp)
+        }
+        const currentTime = moment().valueOf()
+        if (currentTime > checkotp.expiry) {
+            res.send({ status: 0, msg: "expire otp!" })
+
         }
         res.send({ status: 1, msg: "verify successfully" })
         await otpSchema.findByIdAndDelete(checkotp._id)
@@ -90,15 +98,18 @@ const verifyOTP = async (req, res) => {
 }
 
 const updatepassword = async (req, res) => {
-    const {email,newPassword} = req.body;
+    const { email, newPassword } = req.body;
     try {
-    const checkemail = await AddadminSchma.find({email})
-    const updatepassword = await AddadminSchma.findByIdAndUpdate(checkemail._id,{Password:newPassword},{new:true})
-    res.send({status:1,msg:"admin password is updated "})
+        const checkemail = await AddadminSchma.findOne({ email })
+        if (!checkemail) {
+            return res.status(400).json({ status: 0, message: "email not found" })
+        }
+        const updatepassword = await AddadminSchma.findByIdAndUpdate(checkemail._id, { Password: newPassword }, { new: true })
+        res.send({ status: 1, msg: "admin password is updated " })
     } catch (error) {
-    res.send({status:0,msg:"error",error:error.message})
+        res.send({ status: 0, msg: "error", error: error.message })
     }
 }
 
 
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP,updatepassword }
+module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword }
