@@ -1,19 +1,18 @@
 const mongoose = require('mongoose');
 const notificationSchema = new mongoose.Schema({
     status: {
-        
+        type : String,
+        enum : ["Public" , "Private"],
+        required : true
     },
     title: {
-        type: String,
-        required: true
+        type: String
     },
     description: {
-        type: String,
-        required: true
+        type: String
     },
     notificationDate: {
-        type: String,
-        required: true
+        type: String
     }
 })
 const notification = mongoose.model("notifications", notificationSchema);
