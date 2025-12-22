@@ -7,7 +7,7 @@ const adminRouter = require("./src/routes/adminauthRoutes/addadminRoute");
 const popularCourseRoute = require('./src/routes/popularCourseRoute/popularCourseRoute');
 const supportRoute = require("./src/routes/supportRoute/supportRoute");
 const sessionrout = require("./src/routes/academics/sessionRout");
-
+const expenceRouter = require("./src/routes/expences/expencesRoutes");
 const app = express();
 const port = 4001;
 
@@ -20,8 +20,9 @@ app.use("/api/admin", adminRouter);
 app.use("/course", routerCourse);
 app.use("/api/student", studentRouter);
 app.use('/api/popular-course', popularCourseRoute);
-app.use("/api/session",sessionrout);
-app.use("/api/support",supportRoute)
+app.use("/api/session", sessionrout);
+app.use("/api/support", supportRoute)
+app.use("/expences", expenceRouter);
 
 
 app.get("/", (req, res) => res.send("Hello World!"));
