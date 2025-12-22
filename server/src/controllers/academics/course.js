@@ -8,9 +8,7 @@ const getCourse = async (req, res) => {
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
         const skip = (pageNumber - 1) * limitNumber;
-
         const match = {};
-
         if (status) {
             match.status = status;
         }
@@ -21,7 +19,7 @@ const getCourse = async (req, res) => {
             match.duration = duration
         };
         if (courseName) {
-            match.courseName = { $regex: courseName, $options: "i" };
+            match.courseName = courseName;
         }
         const data = await course.aggregate([
             { $match: match },
@@ -34,23 +32,20 @@ const getCourse = async (req, res) => {
                 }
             },
             {
-                $unwind: {
-                    path: "$batchDetails",
-                    preserveNullAndEmptyArrays: true
-                }
+                $unwind: "$batchDetails"
             },
             { $skip: skip },
             { $limit: limitNumber }
         ]);
+        if(data.length == 0){
+            return res.status(200).json({status : true , message : "Data is not avlable !"})
+        }
 
         res.status(200).json({ status: true, message: "success", page: pageNumber, limit: limitNumber, data });
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: "server error",
-            error: error.message
-        });
+        console.log("server error : ", error)
+        return res.status(500).json({ status: false, message: "server error", error: error.message });
     }
 };
 
@@ -108,4 +103,4 @@ const deactiveCourse = async (req, res) => {
 }
 
 
-module.exports = { addCourse, updateCourse, deactiveCourse }
+module.exports = { getCourse, addCourse, updateCourse, deactiveCourse }
