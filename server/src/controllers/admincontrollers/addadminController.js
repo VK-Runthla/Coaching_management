@@ -7,12 +7,8 @@ const sendmails = require("../../utilities/mailer");
 const otpSchema = require("../../models/adminauth/otp_Schma")
 const moment = require("moment")
 
-<<<<<<< HEAD
-const addadmin = async (req, res) => { 
-=======
 const addadmin = async (req, res) => {
 
->>>>>>> 3b5bd9b57c93d0ac470a922b024b77ab534693da
     try {
         const { adminName, email, mobileNumber, password } = req.body;
         const salt = await bcrypt.genSalt(10);
@@ -134,9 +130,6 @@ const resetadminpassword = async (req, res) => {
     }
 }
 
-<<<<<<< HEAD
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP,updatepassword }
-=======
 const updateAdminprofile = async (req, res) => {
     try {
         const { newName, email, newMobileNumber } = req.body;
@@ -168,4 +161,3 @@ const updateAdminprofile = async (req, res) => {
 
 
 module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword, resetadminpassword, updateAdminprofile }
->>>>>>> 3b5bd9b57c93d0ac470a922b024b77ab534693da
