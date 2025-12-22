@@ -1,27 +1,16 @@
 const sessionModel = require("../models/sessionsmodel")
-
 const addsession = async (req, res) => {
-
     try {
         const { year, batches, description, isDefault } = req.body
-
         const add = new sessionModel({ year, batches, description, isDefault })
-
         add.save()
         res.send({ status: true, message: "session added successfully", add })
     }
     catch {
         res.send({ status: false, message: "error adding session" })
-
-
     }
-
-
 }
-
-
 const getsession = async (req, res) => {
-
     try {
         const { year } = req.query
         let matchcondtion = {}
@@ -30,7 +19,6 @@ const getsession = async (req, res) => {
             matchcondtion.year = year
 
         }
-
         const getsessions = await sessionModel.aggregate([
             {
                 $match: matchcondtion
@@ -44,24 +32,14 @@ const getsession = async (req, res) => {
 
                 }
             }
-
         ])
-
         res.send({ status: true, message: "session get successfully", getsessions })
-
-
-
     }
     catch {
         res.send({ status: false, message: "error geting session" })
-
     }
-
 }
-
-
 const updatesession = async (req, res) => {
-
     try {
         const { id } = req.params
 
@@ -75,26 +53,15 @@ const updatesession = async (req, res) => {
         res.send({ status: false, message: "error updating session" })
 
     }
-
 }
-
 const deletesession = async (req, res) => {
-
     try {
         const { id } = req.params
-
-
         const deletes = await sessionModel.findByIdAndDelete(id)
-
         res.send({ status: true, message: "session delete successfully", })
     }
     catch {
         res.send({ status: false, message: "error deletinging session" })
-
     }
-
 }
-
-
-
 module.exports = { addsession, getsession, updatesession,deletesession }
