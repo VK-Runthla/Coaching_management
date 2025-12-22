@@ -18,8 +18,6 @@ const addsession = async (req, res) => {
 
 
 }
-
-
 const getsession = async (req, res) => {
 
     try {
@@ -58,7 +56,6 @@ const getsession = async (req, res) => {
     }
 
 }
-
 const updatesession = async (req, res) => {
 
     try {
@@ -76,7 +73,6 @@ const updatesession = async (req, res) => {
     }
 
 }
-
 const deletesession = async (req, res) => {
 
     try {
