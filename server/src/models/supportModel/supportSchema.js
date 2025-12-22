@@ -16,10 +16,6 @@ const supportSchema = new mongoose.Schema({
     image: {
         type: String,
     },
-    reply: {
-        type: String,
-        default: ""
-    },
     status: {
         type: String,
         enum:["pending","solved"],
