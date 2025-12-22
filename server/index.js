@@ -5,6 +5,7 @@ const subjectRouter = require("./src/routes/academics/Subject");
 const studentRouter = require("./src/routes/studentRoute/studentRoutes");
 const sessionrout = require("./src/routes/sessionRout");
 const adminRouter = require("./src/routes/adminauthRoutes/addadminRoute");
+const expenceRouter = require("./src/routes/expences/expencesRoutes");
 
 const app = express();
 const port = 4001;
@@ -15,6 +16,7 @@ app.use("/api/admin", adminRouter);
 app.use("/course", routerCourse);
 app.use("/api/student", studentRouter);
 app.use("/api/session",sessionrout)
+app.use("/expences",expenceRouter);
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
   console.log(`App is running on port : http://localhost:${port}`)
