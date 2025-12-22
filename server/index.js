@@ -10,11 +10,13 @@ const app = express();
 const port = 4001;
 connectedDatabase();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
 app.use("/api/subject", subjectRouter);
 app.use("/api/admin", adminRouter);
 app.use("/course", routerCourse);
 app.use("/api/student", studentRouter);
-app.use("/api/session",sessionrout)
+app.use("/api/session", sessionrout)
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () =>
   console.log(`App is running on port : http://localhost:${port}`)
