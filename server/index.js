@@ -3,8 +3,8 @@ const connectedDatabase = require("../server/src/config/db");
 const routerCourse = require("./src/routes/academics/courseRouter");
 const subjectRouter = require("./src/routes/academics/Subject");
 const studentRouter = require("./src/routes/studentRoute/studentRoutes");
-const sessionrout = require("./src/routes/sessionRout");
 const adminRouter = require("./src/routes/adminauthRoutes/addadminRoute");
+const sessionrout = require("./src/routes/academics/sessionRout");
 
 const app = express();
 const port = 4001;
