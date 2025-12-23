@@ -1,5 +1,6 @@
 const express=require("express")
-const { addsession, getsession, updatesession, deletesession } = require("../controllers/sessionApis")
+const { addsession,getsession, updatesession, deletesession  } = require("../../controllers/academics/sessionApis")
+
 
 const sessionrout=express.Router()
 
