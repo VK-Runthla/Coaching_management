@@ -17,15 +17,68 @@ const addQuestion = async (req, res) => {
 }
 
 const getQuestion = async (req, res) => {
-    const { id } = req.params;
-    const check = await supports.findById(id);
-    if (!check) {
-        return res.status(400).json({ status: false, message: "data not found" })
+    try {
+        const { search } = req.query;
+
+        const pipeline = [];
+
+        // 1️⃣ lookup student
+        pipeline.push({
+          $lookup: {
+            from: "students",
+            localField: "student",
+            foreignField: "_id",
+            as: "studentData"
+          }
+        });
+
+        // 2️⃣ unwind
+        pipeline.push({
+          $unwind: {
+            path: "$studentData",
+            preserveNullAndEmptyArrays: true
+          }
+        });
+
+        // 3️⃣ regex search by student name
+        if (search) {
+          pipeline.push({
+            $match: {
+              "studentData.name": {
+                $regex: search,
+                $options: "i"
+              }
+            }
+          });
+        }
+
+        // 4️⃣ project final data
+        pipeline.push({
+          $project: {
+            question: 1,
+            message: 1,
+            image: 1,
+            status: 1,
+            createdAt: 1,
+            "studentData.name": 1
+          }
+        });
+
+        const data = await supports.aggregate(pipeline);
+        res.status(200).json({
+            status: true,
+            message: "success",
+            data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: error.message
+        });
     }
+};
 
-
-
-}
 
 const updateQuestion = async (req, res) => {
     try {

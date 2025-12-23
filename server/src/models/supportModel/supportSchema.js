@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const supportSchema = new mongoose.Schema({
     student: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "student",
         required: true
     },
     question: {
