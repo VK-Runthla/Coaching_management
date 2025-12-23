@@ -58,6 +58,9 @@ const updateBatch = async (req, res) => {
     try {
         const { id } = req.params;
         const { start, end } = req.body;
+        if (!start || !end) {
+            return res.status(400).json({ status: false, message: "start and end time is required" });
+        }
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
@@ -71,22 +74,20 @@ const updateBatch = async (req, res) => {
 }
 
 
-const deleteBatch = async (req, res) => {
+const deActiveBatch = async (req, res) => {
     try {
         const { id } = req.params;
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = await batcheSchema.findByIdAndDelete(id);
-        res.status(200).json({ status: true, message: "batch delete successfull", data });
+        const data = await batcheSchema.findByIdAndUpdate(id,{status:'inActive'},{new:true});
+        res.status(200).json({ status: true, message: "batch deActive successfull", data });
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
-
-
     }
 
 }
 
 
-module.exports = { addBatch, updateBatch, deleteBatch, getBatch };
+module.exports = { addBatch, updateBatch, deActiveBatch, getBatch };

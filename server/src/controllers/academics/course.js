@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const course = require('../../models/academics/course');
+const batcheSchema = require('../../models/academics/batches');
 
 
 const getCourse = async (req, res) => {
@@ -8,9 +9,7 @@ const getCourse = async (req, res) => {
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
         const skip = (pageNumber - 1) * limitNumber;
-
         const match = {};
-
         if (status) {
             match.status = status;
         }
@@ -21,38 +20,39 @@ const getCourse = async (req, res) => {
             match.duration = duration
         };
         if (courseName) {
-            match.courseName = { $regex: courseName, $options: "i" };
+            match.courseName = courseName;
         }
         const data = await course.aggregate([
             { $match: match },
             {
                 $lookup: {
                     from: "batches",
-                    localField: "batch_Id",
-                    foreignField: "_id",
+                    localField: "_id",
+                    foreignField: "courseId",
                     as: "batchDetails"
                 }
             },
             {
-                $unwind: {
-                    path: "$batchDetails",
-                    preserveNullAndEmptyArrays: true
-                }
+                $unwind: "$batchDetails"
             },
             { $skip: skip },
             { $limit: limitNumber }
         ]);
+        if (data.length == 0) {
+            return res.status(200).json({ status: true, message: "Data is not avlable !" })
+        }
 
         res.status(200).json({ status: true, message: "success", page: pageNumber, limit: limitNumber, data });
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: "server error",
-            error: error.message
-        });
+        console.log("server error : ", error)
+        return res.status(500).json({ status: false, message: "server error", error: error.message });
     }
 };
+
+
+
+
 
 
 const addCourse = async (req, res) => {
@@ -75,7 +75,7 @@ const updateCourse = async (req, res) => {
         const { id } = req.params;
         const { courseName } = req.body;
         if (!courseName) {
-            return res.status(400).status({ status: false, message: "please enter the course name !" })
+            return res.status(400).json({ status: false, message: "please enter the course name !" })
         }
         const check = await course.findById(id)
         if (!check) {
@@ -90,22 +90,50 @@ const updateCourse = async (req, res) => {
 }
 
 const deactiveCourse = async (req, res) => {
-    const { id } = req.query;
-    const { status } = req.body;
-    const check = await course.findById(id);
-    if (!check) {
-        return res.status(400).json({ status: false, message: "Invalid Id !" })
+    try {
+        const { id } = req.query;
+        const { status } = req.body;
+        const check = await course.findById(id);
+        if (!check) {
+            return res.status(400).json({ status: false, message: "Invalid Id !" })
+        }
+        let statusCheck = check.status = status;
+        const updateStatus = await course.findByIdAndUpdate(id, { status: statusCheck }, { new: true })
+        await updateStatus.save()
+        if (updateStatus.status == "Active") {
+            return res.status(200).json({ status: true, message: "active", status: updateStatus.status })
+        } else {
+            return res.status(200).json({ status: true, message: "inactive", status: updateStatus.status })
+        }
+    } catch (err) {
+        console.log("server error : ", err)
+        return res.status(500).json({ status: false, message: "server error !" })
     }
-    let statusCheck = check.status = status;
-    const updateStatus = await course.findByIdAndUpdate(id, { status: statusCheck }, { new: true })
-    await updateStatus.save()
-    if (updateStatus.status == "Active") {
-        return res.status(200).json({ status: true, message: "active", status: updateStatus.status })
-    } else {
-        return res.status(200).json({ status: true, message: "inactive", status: updateStatus.status })
+
+}
+
+const courseType = async (req, res) => {
+    try {
+        const { id } = req.query;
+        const { courseType } = req.body;
+        const check = await course.findById(id);
+        if (!check) {
+            return res.status(400).json({ status: false, message: "Invalid Id !" })
+        }
+        let typeCheck = check.courseType = courseType;
+        const updateType = await course.findByIdAndUpdate(id, { courseType: typeCheck }, { new: true })
+        await updateType.save()
+        if (updateType.courseType == "Online") {
+            return res.status(200).json({ status: true, message: "Online", status: updateType.courseType })
+        } else {
+            return res.status(200).json({ status: true, message: "Offline", status: updateType.courseType })
+        }
+    } catch (err) {
+        console.log("server error : ", err);
+        return res.status(500).json({ status: false, message: "server error !" })
     }
 
 }
 
 
-module.exports = { addCourse, updateCourse, deactiveCourse }
+module.exports = { getCourse, addCourse, updateCourse, deactiveCourse, courseType }
