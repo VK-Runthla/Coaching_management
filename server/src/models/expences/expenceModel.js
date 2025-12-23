@@ -13,12 +13,13 @@ const expenceSchema = mongoose.Schema({
         required:true
     },
     date:{
-        type:String,
+        type:Date,
         required:true
     },
     paymentMode:{
         type:String,
-        required:true,
+        enum : ["online","cash","upi","credit card"],
+        required:true
     },
     category:{
         type:mongoose.Types.ObjectId,

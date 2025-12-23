@@ -18,7 +18,7 @@ const addExpence = async (req, res) => {
       title,
       amount,
       referenceBy,
-      date,
+      date:new Date(date),
       paymentMode,
       category,
       description,
@@ -33,7 +33,24 @@ const addExpence = async (req, res) => {
 
 const getExpence = async (req, res) => {
   try {
+    const {title, paymentMode, fromDate, toDate} = req.query
+    
+    const matchItems = {};
+    if(title){
+      matchItems.title = title
+    }
+    if(paymentMode){
+      matchItems.paymentMode= paymentMode
+    }
+    if (fromDate || toDate) {
+      matchItems.date = {};
+      if (fromDate) matchItems.date.$gte = new Date(`${fromDate}T00:00:00.000Z`);
+      if (toDate) matchItems.date.$lte = new Date(`${toDate}T23:59:59.999Z`);
+    }
     const expence = await expenceModel.aggregate([
+      {
+        $match:matchItems
+      },
       {
         $lookup: {
           from: "expencecategories",
