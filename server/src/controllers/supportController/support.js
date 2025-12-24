@@ -1,123 +1,131 @@
 const express = require('express');
 const supports = require('../../models/supportModel/supportSchema');
+const { default: mongoose } = require('mongoose');
 
 
-const addQuestion = async (req, res) => {
-    try {
-        const { student, question, message } = req.body;
-        if (!student || !question || !message) {
-            return res.status(400).json({ status: false, message: "all field are required" });
-        }
-        const data = new supports({ student, question, message, image: req.file?.filename });
-        await data.save();
-        res.status(201).json({ status: true, message: "doubt added successfully", data });
-    } catch (error) {
-        res.status(500).json({ status: false, message: "server error", err: error.message });
+const addDoubt = async (req, res) => {
+  try {
+    const { student, question, message } = req.body;
+    if (!student || !question || !message) {
+      return res.status(400).json({ status: false, message: "all field are required" });
     }
+    const data = new supports({ student, question, message, image: req.file?.filename });
+    await data.save();
+    res.status(201).json({ status: true, message: "doubt added successfully", data });
+  } catch (error) {
+    res.status(500).json({ status: false, message: "server error", err: error.message });
+  }
 }
 
-const getQuestion = async (req, res) => {
-    try {
-        const { search } = req.query;
+const getDoubt = async (req, res) => {
+  try {
+    const { search } = req.query;
 
-        const pipeline = [];
+    const pipeline = [];
 
-        // 1️⃣ lookup student
-        pipeline.push({
-          $lookup: {
-            from: "students",
-            localField: "student",
-            foreignField: "_id",
-            as: "studentData"
+    // 1️⃣ lookup student
+    pipeline.push({
+      $lookup: {
+        from: "students",
+        localField: "student",
+        foreignField: "_id",
+        as: "studentData"
+      }
+    });
+
+    // 2️⃣ unwind
+    pipeline.push({
+      $unwind: {
+        path: "$studentData",
+        preserveNullAndEmptyArrays: true
+      }
+    });
+
+    // 3️⃣ regex search by student name
+    if (search) {
+      pipeline.push({
+        $match: {
+          "studentData.name": {
+            $regex: search,
+            $options: "i"
           }
-        });
-
-        // 2️⃣ unwind
-        pipeline.push({
-          $unwind: {
-            path: "$studentData",
-            preserveNullAndEmptyArrays: true
-          }
-        });
-
-        // 3️⃣ regex search by student name
-        if (search) {
-          pipeline.push({
-            $match: {
-              "studentData.name": {
-                $regex: search,
-                $options: "i"
-              }
-            }
-          });
         }
-
-        // 4️⃣ project final data
-        pipeline.push({
-          $project: {
-            question: 1,
-            message: 1,
-            image: 1,
-            status: 1,
-            createdAt: 1,
-            "studentData.name": 1
-          }
-        });
-
-        const data = await supports.aggregate(pipeline);
-        res.status(200).json({
-            status: true,
-            message: "success",
-            data
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: error.message
-        });
+      });
     }
+
+    // 4️⃣ project final data
+    pipeline.push({
+      $project: {
+        question: 1,
+        message: 1,
+        image: 1,
+        status: 1,
+        createdAt: 1,
+        "studentData.name": 1
+      }
+    });
+
+    const data = await supports.aggregate(pipeline);
+    res.status(200).json({
+      status: true,
+      message: "success",
+      data
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: error.message
+    });
+  }
 };
 
+const updateDoubt = async (req, res) => {
+  if (!req?.params?.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ status: false, message: 'valid id  is required' });
 
-const updateQuestion = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { status } = req.body;
+  }
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
-        if (!id || !status) {
-            return res.status(400).json({ status: false, message: 'id and status is required' });
-        }
-        const check = await supports.findById(id);
-        if (!check) {
-            return res.status(400).json({ status: false, message: "doubt not found" });
-        }
-        const data = await supports.findByIdAndUpdate(id, { status }, { new: true });
-        res.status(200).json({ status: true, message: "dout upadted successfully", data });
-    } catch (error) {
-        res.status(500).json({ status: false, message: "server error", err: error.message });
-
+    if (!id || !status) {
+      return res.status(400).json({ status: false, message: 'id and status is required' });
     }
+    const check = await supports.findById(id);
+    if (!check) {
+      return res.status(400).json({ status: false, message: "doubt not found" });
+    }
+    const data = await supports.findByIdAndUpdate(id, { status }, { new: true });
+    res.status(200).json({ status: true, message: "dout upadted successfully", data });
+  } catch (error) {
+    res.status(500).json({ status: false, message: "server error", err: error.message });
+
+  }
 
 }
 
-const deleteQuestion = async (req, res) => {
-    try {
-        const { id } = req.params;
+const deleteDoubt = async (req, res) => {
+  if (!req?.params?.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ status: false, message: 'valid id  is required' });
 
-        if (!id) {
-            return res.status(400).json({ status: false, message: 'id is required' });
-        }
-        const check = await supports.findById(id);
-        if (!check) {
-            return res.status(400).json({ status: false, message: "doubt not found" });
-        }
-        const data = await supports.findByIdAndDelete(id);
-        res.status(200).json({ status: true, message: "dout deleted successfully", data });
-    } catch (error) {
-        res.status(500).json({ status: false, message: "server error", err: error.message });
+  }
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ status: false, message: 'id is required' });
     }
+    const check = await supports.findById(id);
+    if (!check) {
+      return res.status(400).json({ status: false, message: "doubt not found" });
+    }
+    const data = await supports.findByIdAndDelete(id);
+    res.status(200).json({ status: true, message: "dout deleted successfully", data });
+  } catch (error) {
+    res.status(500).json({ status: false, message: "server error", err: error.message });
+  }
 
 }
 
-module.exports = { addQuestion, getQuestion, deleteQuestion, updateQuestion };
+module.exports = { addDoubt, getDoubt, deleteDoubt, updateDoubt };
