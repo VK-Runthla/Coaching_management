@@ -16,6 +16,11 @@ const batches = new mongoose.Schema({
     end:{
         type:String,
         required:true,
+    },
+    status:{
+        type:String,
+        enum:["active","inActive"],
+        default:"active"
     }
 },{timestamps:true})
 
