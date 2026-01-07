@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const studentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -31,6 +32,37 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  //page 2
+  contactNumber: {
+    type:Number,
+    required: true,
+  },
+  aadharNumber:{
+    type:String,
+    required:true,
+  },
+
+  //page 3
+  selectCourse:{
+    type:String,
+    required:true,
+  },
+  selectBatch:{
+    type:String, 
+    required:true,
+  },
+  // page 4
+  fatherName:{
+    type:String,
+    required:true,
+  },
+  motherName:{
+    type:String,
+    required:true,
+  },
+
+
 });
 
 module.exports = mongoose.model("Student", studentSchema);
