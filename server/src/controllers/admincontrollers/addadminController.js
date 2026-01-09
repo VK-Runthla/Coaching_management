@@ -10,9 +10,9 @@ const moment = require("moment")
 const addadmin = async (req, res) => {
 
     try {
+        console.log("this is req.body----->", req.body)
         const { adminName, email, mobileNumber, password } = req.body;
         const salt = await bcrypt.genSalt(10);
-
         const hashpassword = await bcrypt.hash(password, salt);
         const addadmin = new AddadminSchma({ adminName, email, mobileNumber, password: hashpassword, adminprofile: req.file?.filename });
         // console.log(addadmin, "<--- addadmin reeponser")
@@ -23,6 +23,7 @@ const addadmin = async (req, res) => {
         return res.send({ status: 0, msg: "error", error: error.message });
     }
 };
+
 
 const adminlogin = async (req, res) => {
     try {
