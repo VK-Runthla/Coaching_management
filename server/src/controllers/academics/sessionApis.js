@@ -16,8 +16,11 @@ const addsession = async (req, res) => {
 
     }
 
-
 }
+
+
+
+
 const getsession = async (req, res) => {
 
     try {
@@ -39,7 +42,6 @@ const getsession = async (req, res) => {
                     batches: 1,
                     description: 1,
                     isDefault: 1
-
                 }
             }
 
