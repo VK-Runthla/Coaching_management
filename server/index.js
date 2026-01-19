@@ -8,6 +8,7 @@ const popularCourseRoute = require('./src/routes/popularCourseRoute/popularCours
 const supportRoute = require("./src/routes/supportRoute/supportRoute");
 const sessionrout = require("./src/routes/academics/sessionRout");
 const expenceRouter = require("./src/routes/expences/expencesRoutes");
+const notificationRouter = require("./src/routes/advertisement/notification");
 const app = express();
 const port = 4001;
 
@@ -17,12 +18,15 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/subject", subjectRouter);
 app.use("/api/admin", adminRouter);
-app.use("/course", routerCourse);
+app.use("/api/course", routerCourse);
 app.use("/api/student", studentRouter);
 app.use('/api/popular-course', popularCourseRoute);
 app.use("/api/session", sessionrout);
 app.use("/api/support", supportRoute)
 app.use("/expences", expenceRouter);
+app.use("/api/notificationRouter", notificationRouter);
+
+
 
 
 app.get("/", (req, res) => res.send("Hello World!"));
