@@ -12,7 +12,7 @@ const courseSchema = new mongoose.Schema({
     duration: {
         type: String,
         required: true,
-        enum: ["3 Months", "6 Months", "1 Year", "2 Years", "3 Years", "4 Years"]
+        enum: ["3", "6", "12", "24", "36", "48"]
     },
     coursePrice: {
         type: Number,

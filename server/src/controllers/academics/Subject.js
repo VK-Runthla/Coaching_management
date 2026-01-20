@@ -27,7 +27,7 @@ const addSubject = async (req, res) => {
 
 const getSubject = async (req, res) => {
     try {
-        const { subjectName, courseId, limit =1, page } = req.query
+        const { subjectName, courseId, limit = 1, page } = req.query
 
         const pageNumber = parseInt(page) || 1
         const limitNumber = parseInt(limit)

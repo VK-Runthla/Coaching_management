@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const notificationSchema = new mongoose.Schema({
     status: {
-        type : String,
-        enum : ["Public" , "Private"],
-        required : true
+        type: String,
+        enum: ["Public", "Private"]
     },
     title: {
         type: String
@@ -12,6 +11,12 @@ const notificationSchema = new mongoose.Schema({
         type: String
     },
     notificationDate: {
+        type: String
+    },
+    Course: {
+        type: String
+    },
+    Batch: {
         type: String
     }
 })
