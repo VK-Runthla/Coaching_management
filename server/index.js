@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const connectedDatabase = require("../server/src/config/db");
 const routerCourse = require("./src/routes/academics/courseRouter");
 const subjectRouter = require("./src/routes/academics/Subject");
@@ -14,6 +15,7 @@ const app = express();
 const port = 4001;
 
 connectedDatabase();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
