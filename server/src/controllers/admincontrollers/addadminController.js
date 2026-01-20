@@ -11,13 +11,13 @@ const addadmin = async (req, res) => {
     try {
         const { adminName, email, mobileNumber, password } = req.body;
         const salt = await bcrypt.genSalt(10);
-    
+
         const hashpassword = await bcrypt.hash(password, salt);
         const addadmin = new AddadminSchma({ adminName, email, mobileNumber, password: hashpassword, adminprofile: req.file?.filename });
         // console.log(addadmin, "<--- addadmin reeponser")
         const saveResponse = await addadmin.save();
         // console.log(saveResponse, " <---save response")
-        return res.send({ status: 1, msg: "Admin added successfully",});
+        return res.send({ status: 1, msg: "Admin added successfully", });
     } catch (error) {
         return res.send({ status: 0, msg: "error", error: error.message });
     }
