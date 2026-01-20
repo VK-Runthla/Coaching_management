@@ -11,6 +11,8 @@ const addsession = async (req, res) => {
         res.send({ status: false, message: "error adding session" })
     }
 }
+
+
 const getsession = async (req, res) => {
     try {
         const { year } = req.query
@@ -30,7 +32,6 @@ const getsession = async (req, res) => {
                     batches: 1,
                     description: 1,
                     isDefault: 1
-
                 }
             }
         ])
