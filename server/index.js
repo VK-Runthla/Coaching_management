@@ -4,6 +4,7 @@ const connectedDatabase = require("../server/src/config/db");
 const routerCourse = require("./src/routes/academics/courseRouter");
 const subjectRouter = require("./src/routes/academics/Subject");
 const studentRouter = require("./src/routes/studentRoute/studentRoutes");
+// const sessionrout = require("./src/routes/sessionRout");
 const adminRouter = require("./src/routes/adminauthRoutes/addadminRoute");
 const popularCourseRoute = require('./src/routes/popularCourseRoute/popularCourseRoute');
 const supportRoute = require("./src/routes/supportRoute/supportRoute");
