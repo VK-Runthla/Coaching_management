@@ -8,6 +8,10 @@ exports.addStudent = async (req, res) => {
       name,
       gender,
       address,
+      city,
+      state,
+      pincode,
+      email,
       dob,
       joiningDate,
       session,
@@ -20,6 +24,7 @@ exports.addStudent = async (req, res) => {
 
       fatherName,
       motherName,
+      guardianContact,
     } = req.body;
 
 
@@ -27,6 +32,10 @@ exports.addStudent = async (req, res) => {
       !name ||
       !gender ||
       !address ||
+      !city ||
+      !state ||
+      !pincode ||
+      !email ||
       !dob ||
       !joiningDate ||
       !session ||
@@ -35,7 +44,8 @@ exports.addStudent = async (req, res) => {
       !selectCourse ||
       !selectBatch ||
       !fatherName ||
-      !motherName
+      !motherName ||
+      !guardianContact
     ) {
       return res.status(400).json({
         success: false,
