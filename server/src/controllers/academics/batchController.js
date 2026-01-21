@@ -6,7 +6,7 @@ const getBatch = async (req, res) => {
         const { status, name, limit = 10, page } = req.query
         const pageNumber = parseInt(page);
         const limitNumber = parseInt(limit)
-        const skip = (pageNumber - 1) * limitNumber ||0
+        const skip = (pageNumber - 1) * limitNumber || 0
         const match = {}
         if (status) {
             match.status = status
@@ -29,15 +29,15 @@ const getBatch = async (req, res) => {
                 },
             },
             { $skip: skip },
-           { $limit: limitNumber },
-         
-         
-     ])
-res.status(200).json({ status: true, message: "success", data });
-   } catch (error) {
-    res.status(500).json({ status: false, message: "server error", err: error.message });
+            { $limit: limitNumber },
 
-}
+
+        ])
+        res.status(200).json({ status: true, message: "success", data });
+    } catch (error) {
+        res.status(500).json({ status: false, message: "server error", err: error.message });
+
+    }
 }
 
 const addBatch = async (req, res) => {
@@ -58,11 +58,14 @@ const updateBatch = async (req, res) => {
     try {
         const { id } = req.params;
         const { start, end } = req.body;
+        if (!start || !end) {
+            return res.status(400).json({ status: false, message: "start and end time is required" });
+        }
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = batcheSchema.findByIdAndUpdate(id, req.body, { new: true })
+        const data = batcheSchema.findByIdAndUpdate(id, { start, end }, { new: true })
         res.status(200).json({ message: "batch update successfull", data })
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
@@ -71,22 +74,20 @@ const updateBatch = async (req, res) => {
 }
 
 
-const deleteBatch = async (req, res) => {
+const deActiveBatch = async (req, res) => {
     try {
         const { id } = req.params;
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = await batcheSchema.findByIdAndDelete(id);
-        res.status(200).json({ status: true, message: "batch delete successfull", data });
+        const data = await batcheSchema.findByIdAndUpdate(id,{status:'inActive'},{new:true});
+        res.status(200).json({ status: true, message: "batch deActive successfull", data });
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
-
-
     }
 
 }
 
 
-module.exports = { addBatch, updateBatch, deleteBatch, getBatch };
+module.exports = { addBatch, updateBatch, deActiveBatch, getBatch };
