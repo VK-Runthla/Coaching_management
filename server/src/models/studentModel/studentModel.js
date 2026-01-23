@@ -8,8 +8,8 @@ const studentSchema = new mongoose.Schema({
   },
   enrollmentNumber: {
     type: String,
-    unique: true,
-    required: true,
+    // unique: true,
+    // required: true,
   },
   gender: {
     type: String,
@@ -57,7 +57,7 @@ const studentSchema = new mongoose.Schema({
 
   //page 2
   contactNumber: {
-    type:Number,
+    type:String,
     required: true,
   },
   aadharNumber:{
@@ -68,12 +68,15 @@ const studentSchema = new mongoose.Schema({
 
   //page 3
   selectCourse:{
-    type:String,
-    required:true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "courses",
+    required: true, 
   },
   selectBatch:{
-    type:String, 
-    required:true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "batches",
+    required: true,
+  
   },
   // page 4
   fatherName:{
@@ -85,7 +88,7 @@ const studentSchema = new mongoose.Schema({
     required:true,
   },
   guardianContact:{
-    type:Number,
+    type:String,
     required:false,
   },
   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
