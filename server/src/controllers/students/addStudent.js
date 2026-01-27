@@ -1,9 +1,111 @@
 const Student = require("../../models/studentModel/studentModel");
 
+// adding student details 
 exports.addStudent = async (req, res) => {
   try {
-    const { name, gender, address, dob, joiningDate, session } = req.body;
+    const {
+      
+      name,
+      gender,
+      address,
+      city,
+      state,
+      pincode,
+      email,
+      dob,
+      joiningDate,
+      session,
 
+      contactNumber,
+      aadharNumber,
+
+      selectCourse,
+      selectBatch,
+
+      fatherName,
+      motherName,
+      guardianContact,
+    } = req.body;
+
+
+    if (
+      !name ||
+      !gender ||
+      !address ||
+      !city ||
+      !state ||
+      !pincode ||
+      !email ||
+      !dob ||
+      !joiningDate ||
+      !session ||
+      !contactNumber ||
+      !aadharNumber ||
+      !selectCourse ||
+      !selectBatch ||
+      !fatherName ||
+      !motherName ||
+      !guardianContact
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    // Profile photo validation
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile photo is required",
+      });
+    }
+
+    // DOB validation (minimum 3 years old)
+    const dobDate = new Date(dob);
+    const today = new Date();
+    const threeYearsAgo = new Date(
+      today.getFullYear() - 3,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    if (dobDate > threeYearsAgo) {
+      return res.status(400).json({
+        success: false,
+        message: "Date of Birth must be at least 3 years earlier than today",
+      });
+    }
+
+    //Contact number validation 
+    if (!/^[6-9]\d{9}$/.test(contactNumber)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid contact number",
+      });
+    }
+
+    //  Aadhar validation (12 digits)
+    if (!/^\d{12}$/.test(aadharNumber)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Aadhar number",
+      });
+    }
+
+     // Check for existing student with same email or aadhar
+    const existing = await Student.findOne({
+      $or: [{ email }, { aadharNumber }]
+    });
+    
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: "Student with same Email or Aadhar already exists",
+      });
+    }
+
+    // Create student
     const student = new Student({
       name,
       gender,
@@ -11,21 +113,24 @@ exports.addStudent = async (req, res) => {
       dob,
       joiningDate,
       session,
-      profilePhoto: req.file ? req.file.filename : null,
-    });
-    if (!student.profilePhoto) {
-      return res.status(400).json({
-        success: false,
-        message: "Profile photo is required",
-      });
-    }
-    if (!name || !gender || !address || !dob || !joiningDate || !session) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
-    }
+      city,
+      state,
+      pincode,
+      email,
 
+
+      contactNumber,
+      aadharNumber,
+
+      selectCourse,
+      selectBatch,
+
+      fatherName,
+      motherName,
+      guardianContact,
+
+      profilePhoto: req.file.filename,
+    });
 
     await student.save();
 
@@ -39,12 +144,12 @@ exports.addStudent = async (req, res) => {
     res.status(500).json({
       success: false,
       message: error.message,
-
     });
   }
 };
 
 
+// get all student with session etails 
 
 exports.getStudentsWithSession = async (req, res) => {
   try {
@@ -72,3 +177,6 @@ exports.getStudentsWithSession = async (req, res) => {
     });
   }
 };
+
+
+

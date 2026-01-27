@@ -7,21 +7,22 @@ const sendmails = require("../../utilities/mailer");
 const otpSchema = require("../../models/adminauth/otp_Schma")
 const moment = require("moment")
 
-const addadmin = async (req, res) => { 
+const addadmin = async (req, res) => {
     try {
+        console.log("this is req.body----->", req.body)
         const { adminName, email, mobileNumber, password } = req.body;
         const salt = await bcrypt.genSalt(10);
-    
         const hashpassword = await bcrypt.hash(password, salt);
         const addadmin = new AddadminSchma({ adminName, email, mobileNumber, password: hashpassword, adminprofile: req.file?.filename });
         // console.log(addadmin, "<--- addadmin reeponser")
         const saveResponse = await addadmin.save();
         // console.log(saveResponse, " <---save response")
-        return res.send({ status: 1, msg: "Admin added successfully",});
+        return res.send({ status: 1, msg: "Admin added successfully", });
     } catch (error) {
         return res.send({ status: 0, msg: "error", error: error.message });
     }
 };
+
 
 const adminlogin = async (req, res) => {
     try {
@@ -129,5 +130,34 @@ const resetadminpassword = async (req, res) => {
     }
 }
 
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP,updatepassword }
+const updateAdminprofile = async (req, res) => {
+    try {
+        const { newName, email, newMobileNumber } = req.body;
 
+        const checkemail = await AddadminSchma.findOne({ email });
+        if (!checkemail) {
+            return res.send({ status: false, msg: "Invalid email!" });
+        }
+
+        let updateData = {
+            adminName: newName,
+            mobileNumber: newMobileNumber
+        };
+        console.log(req.body.newName)
+
+        if (req.file) {
+            updateData.Adminprofile = req.file.filename;
+        }
+
+        const updatedProfile = await AddadminSchma.findByIdAndUpdate(checkemail._id, updateData, { new: true });
+
+        res.send({ status: true, msg: "Admin profile updated successfully", data: updatedProfile });
+
+    } catch (error) {
+        res.send({ status: false, msg: "Error while updating profile", error: error.message });
+    }
+};
+
+
+
+module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword, resetadminpassword, updateAdminprofile }
