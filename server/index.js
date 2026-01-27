@@ -11,6 +11,8 @@ const sessionrout = require("./src/routes/academics/sessionRout");
 const expenceRouter = require("./src/routes/expences/expencesRoutes");
 const notificationRouter = require("./src/routes/advertisement/notification");
 const bannerrout = require("./src/routes/academics/bannerRouts");
+const departmentRouter = require("./src/routes/team/departmentRoutes");
+const employeeRouter = require("./src/routes/team/employeeRoutes");
 const app = express();
 const port = 4001;
 
@@ -29,6 +31,8 @@ app.use("/api/support", supportRoute)
 app.use("/expences", expenceRouter);
 app.use("/api/notificationRouter", notificationRouter);
 app.use("/api/banner",bannerrout)
+app.use("/api/department",departmentRouter);
+app.use("/api/team",employeeRouter);
 
 
 
