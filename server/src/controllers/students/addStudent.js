@@ -4,10 +4,14 @@ const Student = require("../../models/studentModel/studentModel");
 exports.addStudent = async (req, res) => {
   try {
     const {
-      // Page 1
+      
       name,
       gender,
       address,
+      city,
+      state,
+      pincode,
+      email,
       dob,
       joiningDate,
       session,
@@ -20,6 +24,7 @@ exports.addStudent = async (req, res) => {
 
       fatherName,
       motherName,
+      guardianContact,
     } = req.body;
 
 
@@ -27,6 +32,10 @@ exports.addStudent = async (req, res) => {
       !name ||
       !gender ||
       !address ||
+      !city ||
+      !state ||
+      !pincode ||
+      !email ||
       !dob ||
       !joiningDate ||
       !session ||
@@ -35,7 +44,8 @@ exports.addStudent = async (req, res) => {
       !selectCourse ||
       !selectBatch ||
       !fatherName ||
-      !motherName
+      !motherName ||
+      !guardianContact
     ) {
       return res.status(400).json({
         success: false,
@@ -83,6 +93,18 @@ exports.addStudent = async (req, res) => {
       });
     }
 
+     // Check for existing student with same email or aadhar
+    const existing = await Student.findOne({
+      $or: [{ email }, { aadharNumber }]
+    });
+    
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: "Student with same Email or Aadhar already exists",
+      });
+    }
+
     // Create student
     const student = new Student({
       name,
@@ -91,6 +113,11 @@ exports.addStudent = async (req, res) => {
       dob,
       joiningDate,
       session,
+      city,
+      state,
+      pincode,
+      email,
+
 
       contactNumber,
       aadharNumber,
@@ -100,6 +127,7 @@ exports.addStudent = async (req, res) => {
 
       fatherName,
       motherName,
+      guardianContact,
 
       profilePhoto: req.file.filename,
     });
@@ -149,3 +177,6 @@ exports.getStudentsWithSession = async (req, res) => {
     });
   }
 };
+
+
+

@@ -14,6 +14,7 @@ const notificationRouter = require("./src/routes/advertisement/notification");
 const bannerrout = require("./src/routes/academics/bannerRouts");
 const departmentRouter = require("./src/routes/team/departmentRoutes");
 const employeeRouter = require("./src/routes/team/employeeRoutes");
+const batchesRoute = require("./src/routes/academics/batchesRoute");
 const app = express();
 const port = 4001;
 
@@ -34,7 +35,7 @@ app.use("/api/notificationRouter", notificationRouter);
 app.use("/api/banner",bannerrout)
 app.use("/api/department",departmentRouter);
 app.use("/api/team",employeeRouter);
-
+app.use("/api/batches",batchesRoute)
 
 
 
