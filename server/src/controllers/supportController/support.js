@@ -6,7 +6,7 @@ const addQuestion = async (req, res) => {
     try {
         const { student, question, message } = req.body;
         if (!student || !question || !message) {
-            return res.status(400).json({ status: false, message: "all field are required" });
+            return res.status(400).json({ status: false, message: " all field are required" });
         }
         const data = new supports({ student, question, message, image: req.file?.filename });
         await data.save();
@@ -20,7 +20,7 @@ const getQuestion = async (req, res) => {
     const { id } = req.params;
     const check = await supports.findById(id);
     if (!check) {
-        return res.status(400).json({ status: false, message: "data not found" })
+        return res.status(400).json({ status: false, message: "data not 8" })
     }
 
 

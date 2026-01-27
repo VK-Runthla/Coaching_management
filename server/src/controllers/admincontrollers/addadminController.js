@@ -7,12 +7,7 @@ const sendmails = require("../../utilities/mailer");
 const otpSchema = require("../../models/adminauth/otp_Schma")
 const moment = require("moment")
 
-<<<<<<< HEAD
 const addadmin = async (req, res) => { 
-=======
-const addadmin = async (req, res) => {
-
->>>>>>> 3b5bd9b57c93d0ac470a922b024b77ab534693da
     try {
         const { adminName, email, mobileNumber, password } = req.body;
         const salt = await bcrypt.genSalt(10);
@@ -107,7 +102,7 @@ const updatepassword = async (req, res) => {
     try {
         const checkemail = await AddadminSchma.findOne({ email })
         if (!checkemail) {
-            return res.status(400).json({ status: 0, message: "email not found" })
+            return res.status(400).json({ status: 0, message: "email  b  n   not found" })
         }
         const updatepassword = await AddadminSchma.findByIdAndUpdate(checkemail._id, { Password: newPassword }, { new: true })
         res.send({ status: 1, msg: "admin password is updated " })
@@ -134,38 +129,5 @@ const resetadminpassword = async (req, res) => {
     }
 }
 
-<<<<<<< HEAD
 module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP,updatepassword }
-=======
-const updateAdminprofile = async (req, res) => {
-    try {
-        const { newName, email, newMobileNumber } = req.body;
 
-        const checkemail = await AddadminSchma.findOne({ email });
-        if (!checkemail) {
-            return res.send({ status: false, msg: "Invalid email!" });
-        }
-
-        let updateData = {
-            adminName: newName,
-            mobileNumber: newMobileNumber
-        };
-        console.log(req.body.newName)
-
-        if (req.file) {
-            updateData.Adminprofile = req.file.filename;
-        }
-
-        const updatedProfile = await AddadminSchma.findByIdAndUpdate(checkemail._id, updateData, { new: true });
-
-        res.send({ status: true, msg: "Admin profile updated successfully", data: updatedProfile });
-
-    } catch (error) {
-        res.send({ status: false, msg: "Error while updating profile", error: error.message });
-    }
-};
-
-
-
-module.exports = { addadmin, adminlogin, forgotpassword, verifyOTP, updatepassword, resetadminpassword, updateAdminprofile }
->>>>>>> 3b5bd9b57c93d0ac470a922b024b77ab534693da
