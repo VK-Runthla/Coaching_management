@@ -1,10 +1,19 @@
 const Student = require("../../models/studentModel/studentModel");
+const { v4: uuidv4 } = require("uuid");
 
-// adding student details 
+
+// ================= ENROLLMENT ID GENERATOR =================
+function generateEnrollmentId() {
+  const uuid = uuidv4();                
+  const onlyNumbers = uuid.replace(/\D/g, ""); 
+  return onlyNumbers.substring(0, 6);    
+}
+
+
+// ================= ADD STUDENT =================
 exports.addStudent = async (req, res) => {
   try {
     const {
-      
       name,
       gender,
       address,
@@ -27,7 +36,7 @@ exports.addStudent = async (req, res) => {
       guardianContact,
     } = req.body;
 
-
+    // ---------- Required Fields Validation ----------
     if (
       !name ||
       !gender ||
@@ -53,7 +62,7 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-    // Profile photo validation
+    // ---------- Profile Photo ----------
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -61,7 +70,7 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-    // DOB validation (minimum 3 years old)
+    // ---------- DOB Validation (min 3 years) ----------
     const dobDate = new Date(dob);
     const today = new Date();
     const threeYearsAgo = new Date(
@@ -77,7 +86,7 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-    //Contact number validation 
+    // ---------- Contact Number ----------
     if (!/^[6-9]\d{9}$/.test(contactNumber)) {
       return res.status(400).json({
         success: false,
@@ -85,7 +94,7 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-    //  Aadhar validation (12 digits)
+    // ---------- Aadhar ----------
     if (!/^\d{12}$/.test(aadharNumber)) {
       return res.status(400).json({
         success: false,
@@ -93,11 +102,11 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-     // Check for existing student with same email or aadhar
+    // ---------- Duplicate Check ----------
     const existing = await Student.findOne({
-      $or: [{ email }, { aadharNumber }]
+      $or: [{ email }, { aadharNumber }],
     });
-    
+
     if (existing) {
       return res.status(400).json({
         success: false,
@@ -105,8 +114,14 @@ exports.addStudent = async (req, res) => {
       });
     }
 
-    // Create student
+    // ---------- Generate Enrollment ID ----------
+    const enrollmentId = generateEnrollmentId();
+    // console.log("Generated Enrollment ID:", enrollmentId);
+
+    // ---------- Create Student ----------
     const student = new Student({
+      enrollmentId, 
+
       name,
       gender,
       address,
@@ -117,7 +132,6 @@ exports.addStudent = async (req, res) => {
       state,
       pincode,
       email,
-
 
       contactNumber,
       aadharNumber,
@@ -149,34 +163,29 @@ exports.addStudent = async (req, res) => {
 };
 
 
-// get all student with session etails 
-
+// ================= GET STUDENTS WITH SESSION =================
 exports.getStudentsWithSession = async (req, res) => {
   try {
     const students = await Student.aggregate([
       {
         $lookup: {
-          from: "sessiontables",   
+          from: "sessiontables",
           localField: "session",
           foreignField: "_id",
-          as: "sessionDetails"
-        }
+          as: "sessionDetails",
+        },
       },
-      
     ]);
 
     res.status(200).json({
       success: true,
-      data: students
+      data: students,
     });
   } catch (error) {
     console.log("Error fetching students", error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
-
-
-

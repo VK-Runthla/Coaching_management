@@ -89,7 +89,7 @@ exports.exportStudentsToExcel = async (req, res) => {
       { header: "Father Name", key: "fatherName", width: 20 },
       { header: "Mother Name", key: "motherName", width: 20 },
     ];
-
+    // added row with serial number
     let counter = 1;
     students.forEach((stu) => {
       worksheet.addRow({ sno: counter++, ...stu });
@@ -104,14 +104,10 @@ exports.exportStudentsToExcel = async (req, res) => {
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=students.xlsx"
-    );
+    res.setHeader("Content-Disposition", "attachment; filename=students.xlsx");
 
     await workbook.xlsx.write(res);
     res.end();
-
   } catch (error) {
     console.error("Excel Export Error:", error);
     res.status(500).json({

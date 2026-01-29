@@ -6,10 +6,10 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  enrollmentNumber: {
+  enrollmentId: {
     type: String,
-    // unique: true,
-    // required: true,
+    unique: true,
+    required: true,
   },
   gender: {
     type: String,
