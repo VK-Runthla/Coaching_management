@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const batcheSchema = require("../../models/academics/batches");
 
 
@@ -9,10 +10,13 @@ const getBatch = async (req, res) => {
         const skip = (pageNumber - 1) * limitNumber || 0
         const match = {}
         if (status) {
-            match.status = status
+            match.status = {
+                $regex: status,
+                $options: "i"
+            }
         }
         if (name) {
-            match.name = name
+            match.batchName = { $regex: name, $options: 'i' }
         }
 
         const data = await batcheSchema.aggregate([
@@ -24,12 +28,19 @@ const getBatch = async (req, res) => {
                     from: "courses",
                     foreignField: "_id",
                     localField: "courseId",
-                    as: "newData"
+                    as: "batchData"
 
                 },
             },
             { $skip: skip },
             { $limit: limitNumber },
+            {
+                $unwind: {
+                    path: "$batchData",
+                    preserveNullAndEmptyArrays: true
+                }
+
+            }
 
 
         ])
@@ -55,6 +66,9 @@ const addBatch = async (req, res) => {
 }
 
 const updateBatch = async (req, res) => {
+    if (!req?.params?.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ status: false, message: 'valid id  is required' });
+    }
     try {
         const { id } = req.params;
         const { start, end } = req.body;
@@ -65,7 +79,7 @@ const updateBatch = async (req, res) => {
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = batcheSchema.findByIdAndUpdate(id, { start, end }, { new: true })
+        const data = await batcheSchema.findByIdAndUpdate(id, { start, end }, { new: true })
         res.status(200).json({ message: "batch update successfull", data })
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
@@ -73,21 +87,22 @@ const updateBatch = async (req, res) => {
 
 }
 
-
 const deActiveBatch = async (req, res) => {
+    if (!req?.params?.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ status: false, message: 'valid id  is required' });
+    }
     try {
         const { id } = req.params;
         const check = await batcheSchema.findById(id);
         if (!check) {
             return res.status(400).json({ status: false, message: "batch not found" });
         }
-        const data = await batcheSchema.findByIdAndUpdate(id,{status:'inActive'},{new:true});
+        const data = await batcheSchema.findByIdAndUpdate(id, { status: 'inActive' }, { new: true });
         res.status(200).json({ status: true, message: "batch deActive successfull", data });
     } catch (error) {
         res.status(500).json({ status: false, message: "server error", err: error.message })
     }
 
 }
-
 
 module.exports = { addBatch, updateBatch, deActiveBatch, getBatch };

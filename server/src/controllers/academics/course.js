@@ -51,10 +51,6 @@ const getCourse = async (req, res) => {
 };
 
 
-
-
-
-
 const addCourse = async (req, res) => {
     try {
         const { courseName, courseType, duration, coursePrice, discountPrice, status } = req.body;

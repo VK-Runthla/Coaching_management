@@ -8,6 +8,7 @@ const popularCourseRoute = require('./src/routes/popularCourseRoute/popularCours
 const supportRoute = require("./src/routes/supportRoute/supportRoute");
 const sessionrout = require("./src/routes/academics/sessionRout");
 const expenceRouter = require("./src/routes/expences/expencesRoutes");
+const batchesRoute = require("./src/routes/academics/batchesRoute");
 const app = express();
 const port = 4001;
 
@@ -23,6 +24,7 @@ app.use('/api/popular-course', popularCourseRoute);
 app.use("/api/session", sessionrout);
 app.use("/api/support", supportRoute)
 app.use("/expences", expenceRouter);
+app.use("/api/batch",batchesRoute)
 
 
 app.get("/", (req, res) => res.send("Hello World!"));
